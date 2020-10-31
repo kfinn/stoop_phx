@@ -13,3 +13,8 @@ import "../css/app.scss"
 //     import socket from "./socket"
 //
 import "phoenix_html"
+
+import "react-phoenix"
+
+import TestComponent from "./TestComponent"
+(window as any).TestComponent = TestComponent

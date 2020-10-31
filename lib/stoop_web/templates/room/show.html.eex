@@ -28,4 +28,4 @@
   </li>
 </ul>
 
-<span><%= link "Back", to: Routes.room_path(@conn, :index) %></span>
+<%= react_component("TestComponent", %{some_prop: "some_value"}) %>

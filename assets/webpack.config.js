@@ -17,7 +17,7 @@ module.exports = (env, options) => {
       ]
     },
     entry: {
-      'app': glob.sync('./vendor/**/*.js').concat(['./js/app.js'])
+      'app': glob.sync('./vendor/**/*.js').concat(['./js/app.ts'])
     },
     output: {
       filename: '[name].js',
@@ -28,7 +28,7 @@ module.exports = (env, options) => {
     module: {
       rules: [
         {
-          test: /\.js$/,
+          test: /\.[jt]sx?$/,
           exclude: /node_modules/,
           use: {
             loader: 'babel-loader'
@@ -48,6 +48,14 @@ module.exports = (env, options) => {
       new MiniCssExtractPlugin({ filename: '../css/app.css' }),
       new CopyWebpackPlugin([{ from: 'static/', to: '../' }])
     ]
-    .concat(devMode ? [new HardSourceWebpackPlugin()] : [])
+    .concat(devMode ? [new HardSourceWebpackPlugin()] : []),
+    resolve: {
+      extensions: [".ts", ".tsx", ".js", ".jsx"],
+      modules: ["../deps", "node_modules"],
+      alias: {
+        react: path.resolve(__dirname, './node_modules/react'),
+        'react-dom': path.resolve(__dirname, './node_modules/react-dom')
+      }
+    }
   }
 };

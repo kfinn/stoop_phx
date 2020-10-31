@@ -69,6 +69,8 @@ defmodule StoopWeb do
       import StoopWeb.ErrorHelpers
       import StoopWeb.Gettext
       alias StoopWeb.Router.Helpers, as: Routes
+
+      import ReactPhoenix.ClientSide
     end
   end
 
