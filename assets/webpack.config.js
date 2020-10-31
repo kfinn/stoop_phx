@@ -51,7 +51,7 @@ module.exports = (env, options) => {
     .concat(devMode ? [new HardSourceWebpackPlugin()] : []),
     resolve: {
       extensions: [".ts", ".tsx", ".js", ".jsx"],
-      modules: ["../deps", "node_modules"],
+      modules: [path.resolve(__dirname, 'js'), "../deps", "node_modules"],
       alias: {
         react: path.resolve(__dirname, './node_modules/react'),
         'react-dom': path.resolve(__dirname, './node_modules/react-dom')

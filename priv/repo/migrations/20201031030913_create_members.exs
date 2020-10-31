@@ -10,7 +10,7 @@ defmodule Stoop.Repo.Migrations.CreateMembers do
       add :video_muted, :boolean, default: false, null: false
       add :twilio_participant_sid, :string
       add :shouting, :boolean, default: false, null: false
-      add :room_id, references(:rooms, on_delete: :nothing, type: :binary_id)
+      add :room_id, references(:rooms, on_delete: :nothing, type: :binary_id), null: false
       add :group_id, references(:groups, on_delete: :nothing, type: :binary_id)
       add :invitation_member_id, references(:members, on_delete: :nothing, type: :binary_id)
 

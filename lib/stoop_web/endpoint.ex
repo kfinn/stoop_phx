@@ -10,7 +10,7 @@ defmodule StoopWeb.Endpoint do
     signing_salt: "e5YD44+j"
   ]
 
-  socket "/socket", StoopWeb.UserSocket,
+  socket "/socket", StoopWeb.MemberSocket,
     websocket: true,
     longpoll: false
 

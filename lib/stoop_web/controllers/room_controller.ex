@@ -1,6 +1,5 @@
 defmodule StoopWeb.RoomController do
   use StoopWeb, :controller
-  require Logger
 
   alias Stoop.Rooms
   alias Stoop.Rooms.Room
@@ -28,13 +27,11 @@ defmodule StoopWeb.RoomController do
   def show(conn, %{"id" => id}) do
     room = Rooms.get_room!(id)
     session_id = get_session(conn, :session_id)
-    Logger.info(session_id)
-    case Members.create_member(%{room: room, session_id: session_id}) do
+    case Members.create_member(%{room_id: room.id, session_id: session_id}) do
       {:ok, member} ->
         render(conn, "show.html", room: room, member: member)
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        Logger.info(changeset)
         conn
         |> put_flash(:error, "Could not join room.")
         |> redirect(to: Routes.room_path(conn, :index))

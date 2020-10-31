@@ -26,8 +26,8 @@ defmodule Stoop.Members.Member do
   @doc false
   def changeset(member, attrs) do
     member
-    |> cast(attrs, [:session_id, :name, :muted, :video_muted, :twilio_participant_sid, :shouting])
-    |> validate_required([:session_id, :muted, :video_muted, :shouting])
+    |> cast(attrs, [:session_id, :name, :muted, :video_muted, :twilio_participant_sid, :shouting, :room_id, :group_id, :invitation_member_id])
+    |> validate_required([:session_id, :muted, :video_muted, :shouting, :room_id])
     |> unique_constraint(:twilio_participant_sid)
   end
 end

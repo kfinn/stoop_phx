@@ -6,8 +6,14 @@
     "lib": ["es6", "dom"],
     "moduleResolution": "node",
     "noEmit": true,
-    "strict": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
+    "paths": {
+      "*": [
+        "node_modules/*",
+        "js/*"
+      ]
+    },
   },
   "include": [
     "js"

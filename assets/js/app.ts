@@ -16,5 +16,5 @@ import "phoenix_html"
 
 import "react-phoenix"
 
-import TestComponent from "./TestComponent"
-(window as any).TestComponent = TestComponent
+import RoomShow from "./components/RoomShow"
+(window as any).RoomShow = RoomShow
