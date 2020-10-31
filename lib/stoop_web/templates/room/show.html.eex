@@ -1,0 +1,31 @@
+<h1>Room</h1>
+
+<h2>Room Details</h2>
+
+<ul>
+
+  <li>
+    <strong>ID:</strong>
+    <%= @room.id  %>
+  </li>
+  <li>
+    <strong>Twilio room sid:</strong>
+    <%= @room.twilio_room_sid %>
+  </li>
+
+</ul>
+
+<h2>Member Details</h2>
+
+<ul>
+  <li>
+    <strong>ID:</strong>
+    <%= @member.id %>
+  </li>
+  <li>
+    <strong>Session ID:</strong>
+    <%= @member.session_id %>
+  </li>
+</ul>
+
+<span><%= link "Back", to: Routes.room_path(@conn, :index) %></span>

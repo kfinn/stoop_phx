@@ -8,7 +8,9 @@
 use Mix.Config
 
 config :stoop,
-  ecto_repos: [Stoop.Repo]
+  ecto_repos: [Stoop.Repo],
+  generators: [binary_id: true],
+  migration_primary_key: [type: :binary_id]
 
 # Configures the endpoint
 config :stoop, StoopWeb.Endpoint,

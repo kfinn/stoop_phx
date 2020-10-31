@@ -7,6 +7,15 @@ defmodule StoopWeb.Router do
     plug :fetch_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug :ensure_session_id_exists
+
+    def ensure_session_id_exists(conn, _opts) do
+      if get_session(conn, :session_id) do
+        conn
+      else
+        put_session(conn, :session_id, Ecto.UUID.generate)
+      end
+    end
   end
 
   pipeline :api do
@@ -16,7 +25,8 @@ defmodule StoopWeb.Router do
   scope "/", StoopWeb do
     pipe_through :browser
 
-    get "/", PageController, :index
+    get "/", RoomController, :index
+    resources "/rooms", RoomController, only: [:index, :create, :show]
   end
 
   # Other scopes may use custom stacks.
