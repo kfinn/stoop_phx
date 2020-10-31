@@ -39,3 +39,9 @@ config :stoop, StoopWeb.Endpoint,
 #
 # Then you can assemble a release by calling `mix release`.
 # See `mix help release` for more information.
+
+config :ex_twilio,
+  account_sid: System.get_env("TWILIO_ACCOUNT_SID"),
+  auth_token: System.get_env("TWILIO_AUTH_TOKEN"),
+  api_key: System.get_env("TWILIO_API_KEY"),
+  api_secret: System.get_env("TWILIO_API_SECRET")

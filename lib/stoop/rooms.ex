@@ -68,9 +68,19 @@ defmodule Stoop.Rooms do
 
   """
   def update_room(%Room{} = room, attrs) do
-    room
+    room_update = room
     |> Room.changeset(attrs)
     |> Repo.update()
+
+    if {:ok, room} = room_update do
+      StoopWeb.Endpoint.broadcast!(
+        "room:" <> room.id,
+        "updated",
+        %{ twilio_room_sid: room.twilio_room_sid }
+      )
+    end
+
+    room_update
   end
 
   @doc """
@@ -100,5 +110,28 @@ defmodule Stoop.Rooms do
   """
   def change_room(%Room{} = room, attrs \\ %{}) do
     Room.changeset(room, attrs)
+  end
+
+  def ensure_twilio_room_exists!(%Room{} = room) do
+    locked_room = Room |> where(id: ^room.id) |> lock("FOR UPDATE") |> Repo.one
+
+    twilio_room_sid = case ExTwilio.Video.Room.find(locked_room.twilio_room_sid) do
+      {:ok, %ExTwilio.Video.Room{status: "in-progress"}} ->
+        locked_room.twilio_room_sid
+
+      _ ->
+        case ExTwilio.Video.Room.create(%{}) do
+          {:ok, %ExTwilio.Video.Room{sid: sid}} ->
+            sid
+
+          _ -> nil
+        end
+    end
+
+    if twilio_room_sid do
+      update_room(locked_room, %{twilio_room_sid: twilio_room_sid})
+    else
+      {:error, "could not update twilio_room_sid"}
+    end
   end
 end
