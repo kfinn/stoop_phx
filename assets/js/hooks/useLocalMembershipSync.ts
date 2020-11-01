@@ -71,10 +71,7 @@ export default function useLocalMembershipSync(membershipId: string) {
   const [syncedLocalMembershipParams, setSyncedLocalMembershipParams] = useState({})
 
   const subscription = useSubscription(
-    {
-      name: 'local_member',
-      id: membershipId
-    },
+    'local_member',
     {
       [LocalMembershipChannelEvent.CONNECTED]: ({ name: serverName, ...otherLocalMembershipAttributes }) => {
         const connectedLocalMembership = {

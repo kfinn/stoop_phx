@@ -15,18 +15,13 @@ interface Mixin {
     received: (data: any) => void
 }
 
-export interface Topic {
-    name: string
-    id: string
-}
-
 export default {
     subscriptions: {
-        create: ({ name, id }: Topic, mixin: Mixin) => {
+        create: (topic: string, mixin: Mixin) => {
             if (!socket) {
                 throw "socket not configured"
             }
-            const channel = socket.channel(`${name}:${id}`)
+            const channel = socket.channel(topic)
             channel
                 .join()
                 .receive('ok', () => {
@@ -46,11 +41,7 @@ export default {
             }
             channel.onMessage = (event, payload) => {
                 const camelizedPayload = camelize({ event, payload })
-                console.log({ name, id })
-                console.log(camelizedPayload)
                 mixin.received(camelizedPayload)
-                // FIXME: if we return camelizedPayload then the internals break
-                // return camelizedPayload
                 return payload
             }
 

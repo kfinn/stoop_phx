@@ -1,4 +1,4 @@
-import consumer, { Topic } from "channels/consumer";
+import consumer from "channels/consumer";
 import { useEffect, useRef, useState } from "react";
 import _ from "lodash";
 
@@ -10,7 +10,7 @@ export interface Subscription {
     perform: (action: string, attributes: any) => void
 }
 
-export default function useSubscription(topic: Topic, actions: SubscriptionActions) {
+export default function useSubscription(topic: string, actions: SubscriptionActions) {
     const actionsRef = useRef(actions)
 
     useEffect(() => {

@@ -1,17 +1,14 @@
 defmodule StoopWeb.LocalMemberChannel do
   use StoopWeb, :channel
 
-  @impl true
-  def join("local_member:" <> member_id, _payload, socket) do
-    authenticated_member = Stoop.Members.get_member!(socket.assigns[:member_id])
-    local_member = Stoop.Members.get_member!(member_id)
+    alias Phoenix.Socket.Broadcast
 
-    if local_member == authenticated_member do
-      send(self(), :after_join)
-      {:ok, socket}
-    else
-      {:error, %{reason: "unauthorized"}}
-    end
+  @impl true
+  def join("local_member", _payload, socket) do
+    member = Stoop.Members.get_member!(socket.assigns[:member_id])
+    :ok = StoopWeb.Endpoint.subscribe("local_member:" <> member.id)
+    send(self(), :after_join)
+    {:ok, socket}
   end
 
   @impl true
@@ -28,9 +25,19 @@ defmodule StoopWeb.LocalMemberChannel do
   end
 
   @impl true
+  def handle_info(%Broadcast{topic: _, event: event, payload: payload}, socket) do
+    push(socket, event, payload)
+    {:noreply, socket}
+  end
+
+  @impl true
   def handle_in("update", %{"local_member" => local_member_params}, socket) do
     member = Stoop.Members.get_member!(socket.assigns[:member_id])
-    Stoop.Members.update_member(member, local_member_params)
+    Stoop.Members.update_member(
+      member,
+      local_member_params,
+      broadcast_to_local_member: false
+    )
 
     {:noreply, socket}
   end

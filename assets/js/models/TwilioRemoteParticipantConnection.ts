@@ -15,9 +15,9 @@ export default class TwilioRemoteParticipantConnection {
     this.remoteParticipant = remoteParticipant
     this.remoteMembership = null
 
-    const subscriptionParams = { name: 'remote_member', id: remoteParticipant.sid }
+    const topic = `remote_member:${remoteParticipant.sid}`
     this.subscription = consumer.subscriptions.create(
-      subscriptionParams,
+      topic,
       {
         received: (data: any) => {
           if (_.includes(['connected', 'updated'], data.event)) {
@@ -26,7 +26,7 @@ export default class TwilioRemoteParticipantConnection {
               this.onChange(this)
             }
           } else {
-            console.error(`${subscriptionParams} received unknown event ${data.event}`);
+            console.error(`${topic} received unknown event ${data.event}`);
           }
         }
       }

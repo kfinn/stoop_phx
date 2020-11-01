@@ -67,17 +67,20 @@ defmodule Stoop.Members do
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_member(%Member{} = member, attrs) do
+  def update_member(%Member{} = member, attrs, opts \\ []) do
     member_update = member
       |> Member.changeset(attrs)
       |> Repo.update()
 
-    if {:ok, member} = member_update do
-      StoopWeb.Endpoint.broadcast!(
-        "local_member:" <> member.id,
-        "updated",
-        to_local_member_channel_attributes(member)
-      )
+    broadcast_to_local_member = Keyword.get(opts, :broadcast_to_local_member, true)
+    if broadcast_to_local_member do
+      if  {:ok, member} = member_update do
+        StoopWeb.Endpoint.broadcast!(
+          "local_member:" <> member.id,
+          "updated",
+          to_local_member_channel_attributes(member)
+        )
+      end
     end
 
     member_update

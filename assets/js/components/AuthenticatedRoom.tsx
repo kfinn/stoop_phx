@@ -13,17 +13,14 @@ interface RoomAuthentication {
   roomAccessToken: string
 }
 
-export default function AuthenticatedRoom({ id, membershipId }: { id: string, membershipId: string }) {
+export default function AuthenticatedRoom({ membershipId }: { membershipId: string }) {
   const [roomAuthentication, setRoomAuthentication] = useState<RoomAuthentication>()
 
   useSubscription(
+    "room",
     {
-      name: 'room',
-      id: id
-    },
-    {
-      [RoomChannelEvent.CONNECTED]: (newValue) => { console.log(newValue); setRoomAuthentication(newValue) },
-      [RoomChannelEvent.UPDATED]: (newValue) => { console.log(newValue); setRoomAuthentication(newValue) }
+      [RoomChannelEvent.CONNECTED]: setRoomAuthentication,
+      [RoomChannelEvent.UPDATED]: setRoomAuthentication
     }
   )
 
@@ -31,6 +28,5 @@ export default function AuthenticatedRoom({ id, membershipId }: { id: string, me
     return <div>loading...</div>
   }
 
-  console.log('have roomAuthentication, rendering')
   return <Room membershipId={membershipId} {...roomAuthentication} />
 }
