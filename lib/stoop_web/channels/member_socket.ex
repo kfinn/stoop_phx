@@ -4,6 +4,7 @@ defmodule StoopWeb.MemberSocket do
   ## Channels
   channel "room", StoopWeb.RoomChannel
   channel "local_member", StoopWeb.LocalMemberChannel
+  channel "remote_member:*", StoopWeb.RemoteMemberChannel
 
   @impl true
   def connect(%{ "membership_token" => membership_token }, socket, _connect_info) do

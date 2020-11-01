@@ -37,6 +37,13 @@ defmodule Stoop.Members do
   """
   def get_member!(id), do: Repo.get!(Member, id)
 
+  def get_member_by_twilio_participant_sid!(twilio_participant_sid) do
+    Member
+      |> where([members], members.twilio_participant_sid == ^twilio_participant_sid)
+      |> first
+      |> Repo.one!
+  end
+
   @doc """
   Creates a member.
 
@@ -72,13 +79,20 @@ defmodule Stoop.Members do
       |> Member.changeset(attrs)
       |> Repo.update()
 
-    broadcast_to_local_member = Keyword.get(opts, :broadcast_to_local_member, true)
-    if broadcast_to_local_member do
-      if  {:ok, member} = member_update do
+    if  {:ok, member} = member_update do
+      broadcast_to_local_member = Keyword.get(opts, :broadcast_to_local_member, true)
+      if broadcast_to_local_member do
         StoopWeb.Endpoint.broadcast!(
           "local_member:" <> member.id,
           "updated",
           to_local_member_channel_attributes(member)
+        )
+      end
+      if member.twilio_participant_sid do
+        StoopWeb.Endpoint.broadcast!(
+          "remote_member:" <> member.twilio_participant_sid,
+          "updated",
+          to_remote_member_channel_attributes(member)
         )
       end
     end
@@ -124,5 +138,16 @@ defmodule Stoop.Members do
       group_id: member.group_id,
       invitation_membership_id: member.invitation_member_id
     }
+  end
+
+  def to_remote_member_channel_attributes(%Member{} = member) do
+    Map.merge(
+      to_local_member_channel_attributes(member),
+      %{
+        id: member.id,
+        twilio_participant_sid: member.twilio_participant_sid,
+        active: true
+      }
+    )
   end
 end
