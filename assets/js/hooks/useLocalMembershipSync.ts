@@ -72,7 +72,7 @@ export default function useLocalMembershipSync(membershipId: string) {
 
   const subscription = useSubscription(
     {
-      name: 'local_membership',
+      name: 'local_member',
       id: membershipId
     },
     {

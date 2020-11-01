@@ -68,9 +68,19 @@ defmodule Stoop.Members do
 
   """
   def update_member(%Member{} = member, attrs) do
-    member
-    |> Member.changeset(attrs)
-    |> Repo.update()
+    member_update = member
+      |> Member.changeset(attrs)
+      |> Repo.update()
+
+    if {:ok, member} = member_update do
+      StoopWeb.Endpoint.broadcast!(
+        "local_member:" <> member.id,
+        "updated",
+        to_local_member_channel_attributes(member)
+      )
+    end
+
+    member_update
   end
 
   @doc """
@@ -100,5 +110,16 @@ defmodule Stoop.Members do
   """
   def change_member(%Member{} = member, attrs \\ %{}) do
     Member.changeset(member, attrs)
+  end
+
+  def to_local_member_channel_attributes(%Member{} = member) do
+    %{
+      name: member.name,
+      muted: member.muted,
+      video_muted: member.video_muted,
+      shouting: member.shouting,
+      group_id: member.group_id,
+      invitation_membership_id: member.invitation_member_id
+    }
   end
 end
