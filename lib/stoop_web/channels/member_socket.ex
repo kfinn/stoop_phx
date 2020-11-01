@@ -16,5 +16,5 @@ defmodule StoopWeb.MemberSocket do
   end
 
   @impl true
-  def id(socket), do: "memer:socket:#{socket.assigns[:member_id]}"
+  def id(socket), do: "member:socket:#{socket.assigns[:member_id]}"
 end

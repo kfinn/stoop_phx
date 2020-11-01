@@ -29,7 +29,7 @@ export default {
             const channel = socket.channel(`${name}:${id}`)
             channel
                 .join()
-                .receive('ok', () => { 
+                .receive('ok', () => {
                     if (mixin.connected) {
                         mixin.connected()
                     }
@@ -46,10 +46,12 @@ export default {
             }
             channel.onMessage = (event, payload) => {
                 const camelizedPayload = camelize({ event, payload })
-                console.log({name, id})
+                console.log({ name, id })
                 console.log(camelizedPayload)
                 mixin.received(camelizedPayload)
-                return camelizedPayload
+                // FIXME: if we return camelizedPayload then the internals break
+                // return camelizedPayload
+                return payload
             }
 
             return {

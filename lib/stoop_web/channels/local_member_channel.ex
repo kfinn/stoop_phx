@@ -26,4 +26,12 @@ defmodule StoopWeb.LocalMemberChannel do
 
     {:noreply, socket}
   end
+
+  @impl true
+  def handle_in("update", %{"local_member" => local_member_params}, socket) do
+    member = Stoop.Members.get_member!(socket.assigns[:member_id])
+    Stoop.Members.update_member(member, local_member_params)
+
+    {:noreply, socket}
+  end
 end

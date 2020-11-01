@@ -44,12 +44,12 @@ export default function useLocalMembershipSync(membershipId: string) {
     twilioParticipantSid,
     invitationMembershipId
   }), [
-      name,
-      muted,
-      videoMuted,
-      shouting,
-      twilioParticipantSid,
-      invitationMembershipId
+    name,
+    muted,
+    videoMuted,
+    shouting,
+    twilioParticipantSid,
+    invitationMembershipId
   ])
 
   const setLocalMembership = ({
@@ -96,7 +96,7 @@ export default function useLocalMembershipSync(membershipId: string) {
 
   useEffect(() => {
     if (!_.isEqual(localMembershipParams, syncedLocalMembershipParams)) {
-      subscription.perform('update', { localMembership: localMembershipParams })
+      subscription.perform('update', { localMember: localMembershipParams })
       setSyncedLocalMembershipParams(localMembershipParams)
     }
   }, [localMembershipParams])
